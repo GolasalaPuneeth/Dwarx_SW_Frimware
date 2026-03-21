@@ -2,12 +2,11 @@ from dotenv import load_dotenv
 import paho.mqtt.publish as publish
 import os
 import enum
-import asyncio
+# import asyncio
 
 load_dotenv()
 
 class MqttSecrets(enum.Enum):
-  
     HOST:str = os.getenv('MQTT_HOST')
     PORT:int = int(os.getenv('MQTT_PORT'))
 
@@ -34,4 +33,4 @@ async def trigger_esp(Customer:str,
                    port=port,
                    qos=1)
 
-asyncio.run(trigger_esp("Sam",1.0,"paho/test/topic"))
+# asyncio.run(trigger_esp("Sam",1.0,"paho/test/topic"))
