@@ -1,55 +1,47 @@
-from fastapi import FastAPI, Request, Header, HTTPException
-import hmac
-import hashlib
-import json
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from Routes import Payments
+import time
 import uvicorn
 
-app = FastAPI()
-WEBHOOK_SECRET = "mysecret123"
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("--------------> On Pull up")
+    yield
+    print("--------------> On Pull down")
 
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+app = FastAPI(root_path="/",
+              title="HYDROPAY VENDX BACKEND",
+              lifespan=lifespan)
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    end_time = time.perf_counter()
+    execution_time = (end_time - start_time) * 1000
+    response.headers["X-Response-Time"] = f"{execution_time:.2f} ms"
+    return response
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://www.tapmytalent.com"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(Payments,prefix="/v1")
 
 
-@app.post("/razhook")
-async def razorpay_webhook(
-    request: Request,
-    x_razorpay_signature: str = Header(None),
-    x_razorpay_event_id: str = Header(None)
-    ):
-    # 1. Read raw body
-    body = await request.body()
+# @app.get("/")
+# async def read_root():
+#     return {"Hello": "World"}
 
-    # 2. Verify signature
-    generated_signature = hmac.new(
-        WEBHOOK_SECRET.encode(),
-        body,
-        hashlib.sha256
-    ).hexdigest()
 
-    if not hmac.compare_digest(generated_signature, x_razorpay_signature):
-        raise HTTPException(status_code=400, detail="Invalid signature")
 
-    # 3. Parse JSON
-    payload = json.loads(body)
-    event = payload.get("event")
-
-    print("Event:", event)
-
-    # 4. Handle events
-    if event == "qr_code.credited":
-        data = payload["payload"]["qr_code"]["entity"]
-
-        payment_id = data.get("payment_id")
-        amount = data.get("amount")
-
-        print("Payment received:", payment_id, amount)
-        # print(payload)
-        print(payload['payload']['payment']['entity']['amount'])
-        print(payload['payload']['qr_code']['entity']['id'])
-    return {"status": "ok"}
 
 
 if __name__=="__main__":
