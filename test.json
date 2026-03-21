@@ -1,0 +1,73 @@
+{
+  "entity": "event",
+  "account_id": "acc_Nu6qHrmvAcMZZu",
+  "event": "qr_code.credited",
+  "contains": ["payment", "qr_code"],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_SSmaF5rM7L38X3",
+        "entity": "payment",
+        "amount": 100,
+        "currency": "INR",
+        "status": "captured",
+        "order_id": null,
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": true,
+        "description": "QRv2 Payment",
+        "card_id": null,
+        "bank": null,
+        "wallet": null,
+        "vpa": "8096226158@ybl",
+        "email": null,
+        "contact": null,
+        "notes": [],
+        "fee": 1,
+        "tax": 0,
+        "error_code": null,
+        "error_description": null,
+        "error_source": null,
+        "error_step": null,
+        "error_reason": null,
+        "acquirer_data": {
+          "rrn": "241421477114"
+        },
+        "created_at": 1773857442,
+        "reward": null,
+        "upi": {
+          "payer_account_type": "bank_account",
+          "vpa": "8096226158@ybl",
+          "flow": "intent"
+        }
+      }
+    },
+    "qr_code": {
+      "entity": {
+        "id": "qr_SQlRDZoVmnVKG6",
+        "entity": "qr_code",
+        "created_at": 1773416728,
+        "name": null,
+        "usage": "multiple_use",
+        "type": "upi_qr",
+        "image_url": "https://rzp.io/rzp/ABmzfFj",
+        "payment_amount": null,
+        "status": "active",
+        "description": "sample",
+        "fixed_amount": false,
+        "payments_amount_received": 3100,
+        "payments_count_received": 15,
+        "notes": [],
+        "customer_id": null,
+        "close_by": null,
+        "closed_at": null,
+        "close_reason": null,
+        "tax_invoice": []
+      }
+    }
+  },
+  "created_at": 1773857443
+}
