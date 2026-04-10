@@ -1,0 +1,16 @@
+{
+    "vsmqtt.brokerProfiles": [
+        {
+            "name": "Puneeth",
+            "host": "mqtt.hydropay.in",
+            "port": 1883,
+            "clientId": "vsmqtt_client_d6f7",
+            "defaultsForPublish": {
+                "topic": "test",
+                "payload": "hello",
+                "qos": 1,
+                "retain": false
+            }
+        }
+    ]
+}
