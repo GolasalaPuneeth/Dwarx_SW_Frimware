@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Request, Header, Depends
 from dotenv import load_dotenv
-from app.ServiceLayer import IcustomerRequest,CustomerRequest
+from ServiceLayer import IcustomerRequest,CustomerRequest
 import os
 import hmac
 import hashlib
@@ -11,7 +11,7 @@ load_dotenv()
 Payments : APIRouter = APIRouter(prefix="/payX",tags=["Razorpay UPI Hook"])
 
 if not os.getenv("RAZ_WEBHOOK_SECRET"):
-        raise ValueError(f"Missing required environment variable: {"RAZ_WEBHOOK_SECRET"}")
+        raise ValueError(f"Missing required environment variable: RAZ_WEBHOOK_SECRET")
 else:
      WEBHOOK_SECRET = os.getenv("RAZ_WEBHOOK_SECRET")
 
@@ -56,3 +56,9 @@ async def razorpay_webhook(
         await Services.push_service(qrid=Qr_ID,amount=Amount,vpa="saple@123")
         print(Amount,Qr_ID)
     return {"status": "ok"}
+
+@Payments.post("/test")
+async def testmqtt():
+     await Services.push_service(qrid="test",amount=100,vpa="saple@123")
+     return {"status": "ok"}
+     

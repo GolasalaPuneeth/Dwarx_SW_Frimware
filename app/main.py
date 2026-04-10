@@ -1,20 +1,29 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from app.Routes import Payments
+from Routes import Payments
+from DatabaseLayer import engine,SQLModel
 import time
 import uvicorn
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("--------------> On Pull up")
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
     yield
     print("--------------> On Pull down")
+    await engine.dispose()
 
 
 app = FastAPI(root_path="/",
               title="HYDROPAY VENDX BACKEND",
               lifespan=lifespan)
+
+
+
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
@@ -27,7 +36,7 @@ async def add_process_time_header(request: Request, call_next):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://www.tapmytalent.com"], 
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,10 +45,5 @@ app.add_middleware(
 app.include_router(Payments,prefix="/v1")
 
 
-# @app.get("/")
-# async def read_root():
-#     return {"Hello": "World"}
-
-
 if __name__=="__main__":
-    uvicorn.run(app=app,host="0.0.0.0",port=3001)
+    uvicorn.run(app=app,host="0.0.0.0",port=3000)

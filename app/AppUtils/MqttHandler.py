@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import paho.mqtt.publish as publish
 import os
 import enum
-# import asyncio
+import asyncio
 
 load_dotenv()
 
