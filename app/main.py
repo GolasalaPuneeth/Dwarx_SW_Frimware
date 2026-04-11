@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from Routes import Payments
+from Routes import Payments,db_router
 from DatabaseLayer import engine,SQLModel
 import time
 import uvicorn
@@ -43,7 +43,9 @@ app.add_middleware(
 )
 
 app.include_router(Payments,prefix="/v1")
+app.include_router(db_router,prefix="/v1")
+
 
 
 if __name__=="__main__":
-    uvicorn.run(app=app,host="0.0.0.0",port=3000)
+    uvicorn.run(app="main:app",host="0.0.0.0",port=3000,reload=True)
